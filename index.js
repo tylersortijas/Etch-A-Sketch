@@ -1,50 +1,53 @@
-const gameContainer = document.querySelector('#game-container');
-const titleContainer = document.querySelector('#title');
-const buttonsContainer = document.querySelector('#buttons');
-const resetButton = document.createElement('button');
+const grid = document.querySelector('.grid');
+let gridValue = document.querySelector('.grid-size');
+let gridSize = document.querySelector('input');
+const resetBtn = document.querySelector('.reset');
+const applyGridSize = document.querySelector('.apply');
+let squareSize = 8;
 
+createGrid(squareSize);
 
-resetButton.innerText = "Reset"
-resetButton.classList.add('button');
-buttonsContainer.appendChild(resetButton);
+// Create Squared Divs
+function createDivs(size) {
+    const div = document.createElement('div');
+    div.classList.add('box');
+    div.style.width = `${size}px`;
+    div.style.height = `${size}px`;
 
-
-titleContainer.innerText = "Etch-A-Sketch";
-titleContainer.classList.add('title')
-
-
-function makeRows(rows, cols) {
-    gameContainer.style.setProperty('--grid-rows', rows);
-    gameContainer.style.setProperty('--grid-cols', cols);
-    for (let c = 0; c < (rows * cols); c++) {
-        let cell = document.createElement('div');
-        gameContainer.appendChild(cell).className = 'grid-item';
-        cell.addEventListener('mouseover', () => {
-            cell.style.backgroundColor = 'pink';
-        });
-    };
-};
-
-makeRows(16, 16);
-
-function numberOfBoxes() {
-    let number = prompt("Choose a grid number! (Anything above 100 is will not work)");
-    while(number === '' || number === null) {
-        number = prompt("Please enter a number!(Max number is 100)");
-    }
-
-    reset();
-    makeRows(number, number);
+    return div;
 }
 
-resetButton.addEventListener('click', () => {
-    numberOfBoxes();
-});
+// create The Grid and append it to the grid
+function createGrid(gridSize) {
+    for (let i = 0; i < gridSize; i++){
+        for (let j = 0; j < gridSize; j++){
+            grid.appendChild(createDiv(grid.clientWidth / gridSize));
+        }
+    }
+}
 
 function reset() {
-    let squares = document.querySelectorAll(".grid-item");
-    squares.forEach((e) => e.parentNode.removeChild(e));
-};
+    while (grid.firstChild) {
+        grid.removeChild(grid.lastChild);
+    }
+    createGrid(squareSize);
+}
 
+// Used event Delegation to target children of the grid
+grid.addEventListener('mouseover', function (e) {
+    // Add the "active class to only divs with "box" class
+    if(e.target.matches('.box')) {
+        e.target.classList.add('active');
+    }
+});
 
+gridSize.addEventListener('input', function (e) {
+    squareSize = e.target.value;
+    gridValue.textContent = `${squareSize}x${squareSize}`;
+});
 
+applyGridSize.addEventListener('click', function () {
+    reset();
+});
+
+resetBtn.addEventListener('click', reset);
