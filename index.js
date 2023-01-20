@@ -8,7 +8,7 @@ let squareSize = 8;
 createGrid(squareSize);
 
 // Create Squared Divs
-function createDivs(size) {
+function createDiv(size) {
     const div = document.createElement('div');
     div.classList.add('box');
     div.style.width = `${size}px`;
